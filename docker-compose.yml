@@ -1,0 +1,25 @@
+version: "2"
+services:
+
+    php:
+      image: php:7.1.2-apache 
+      ports:
+        - "80:80"
+      volumes:
+        - ./www:/var/www/html/
+    db:
+        image: mysql
+        ports: 
+            - "3306:3306"
+        environment:
+            MYSQL_DATABASE: matovo_db
+            MYSQL_USER: mata
+            MYSQL_PASSWORD: 862000
+            MYSQL_ROOT_PASSWORD: 862000
+        volumes:
+            - ./dump:/docker-entrypoint-initdb.d
+            - persistent:/var/lib/mysql
+        networks:
+            - default
+volumes:
+    persistent:
