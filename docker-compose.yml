@@ -2,24 +2,38 @@ version: "2"
 services:
 
     php:
-      image: php:7.1.2-apache 
+      container_name: php
+      build: ./docker/php
       ports:
         - "80:80"
       volumes:
-        - ./www:/var/www/html/
+        - ./src/backend:/code/
+      working_dir: /code
     db:
+        container_name: db
         image: mysql
         ports: 
             - "3306:3306"
         environment:
-            MYSQL_DATABASE: matovo_db
+            MYSQL_DATABASE: andulka_db
             MYSQL_USER: mata
-            MYSQL_PASSWORD: 862000
-            MYSQL_ROOT_PASSWORD: 862000
+            MYSQL_PASSWORD: pass
+            MYSQL_ROOT_PASSWORD: pass
         volumes:
             - ./dump:/docker-entrypoint-initdb.d
             - persistent:/var/lib/mysql
         networks:
             - default
+    frontend:
+      container_name: frontend
+      image: node:19-alpine
+      command: "npm run dockerbuild"
+      ports:
+        - "3000:3000"
+      working_dir: "/code"
+      volumes:
+        - ./src/frontend:/code
+      restart: always
+
 volumes:
     persistent:
